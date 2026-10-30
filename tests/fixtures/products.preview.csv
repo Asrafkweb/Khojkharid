@@ -1,0 +1,6 @@
+id,name,slug,category,brand,model,price,currency,seller,affiliate_url,image_url,short_description,full_description,features,specifications,seo_title,meta_description,primary_keyword,secondary_keywords,canonical_url,availability,last_updated,status
+T1,TEST ONLY Laptop Stand,test-laptop-stand,Office & Study,TestBrand,LS-1,1500,NPR,Test Seller,https://example.com/aff/t1,https://example.com/t1.jpg,"Fake item for previewing the layout.","First paragraph, with a comma.
+
+Second paragraph in quotes: ""test"".",Adjustable height|Foldable,Material: Aluminium|Weight: 1 kg,,,,,,in_stock,2026-10-20,published
+T2,TEST ONLY Desk Lamp,test-desk-lamp,Office & Study,TestBrand,DL-2,2200,NPR,Test Seller,https://example.com/aff/t2,https://example.com/t2.jpg,Fake lamp for previewing.,Fake description for layout preview only.,Dimmable|USB powered,Power: 5 W,,,,,,,2026-10-22,draft
+T3,TEST ONLY Water Bottle,test-water-bottle,Sports & Fitness,OtherBrand,WB-3,800,NPR,Test Seller,https://example.com/aff/t3,https://example.com/t3.jpg,Fake bottle for previewing.,Fake description for layout preview only.,Leak proof,Capacity: 750 ml,,,,,,,2026-10-24,published

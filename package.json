@@ -1,0 +1,15 @@
+{
+  "name": "khojkharid",
+  "version": "0.3.0",
+  "private": true,
+  "description": "KhojKharid.online - Nepal-focused product discovery and comparison site (static).",
+  "scripts": {
+    "validate": "node scripts/validate-data.js",
+    "build": "node build.js",
+    "serve": "node scripts/serve.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

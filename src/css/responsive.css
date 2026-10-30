@@ -1,0 +1,82 @@
+/* Layout changes for smaller screens. */
+@media (max-width: 860px) {
+  .hero { padding-block: var(--space-4); }
+  .hero__inner { grid-template-columns: 1fr; }
+  .site-footer__grid { grid-template-columns: 1fr 1fr; }
+  .site-footer__about { grid-column: 1 / -1; }
+  .section { padding-block: var(--space-4); }
+
+  /* Header: logo + menu button on row one, search below */
+  .site-header__inner { flex-wrap: wrap; gap: .5rem 1rem; padding-block: .6rem; }
+  .site-header .search { order: 3; flex-basis: 100%; max-width: none; margin-left: 0; }
+  .theme-toggle { order: 1; margin-left: auto; }
+  .nav { order: 4; flex-basis: 100%; }
+  .nav__list { flex-direction: column; padding-bottom: .5rem; }
+
+  /* The menu is only collapsed when JavaScript is available to open it. */
+  .js .nav-toggle {
+    display: inline-flex; align-items: center; justify-content: center; order: 2;
+    width: 44px; height: 44px; background: var(--color-surface); border: 1.5px solid var(--color-border);
+    border-radius: 12px; cursor: pointer; color: var(--color-text);
+  }
+  .js .nav { display: none; }
+  .js .nav.is-open { display: block; }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 1rem; }
+  .search--large .search__button { padding-inline: 1.1rem; }
+  .hero__actions .btn { flex: 1 1 100%; }
+}
+
+@media (max-width: 760px) {
+  .product { grid-template-columns: 1fr; gap: var(--space-3); }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+}
+
+@media (max-width: 560px) {
+  .site-footer__grid { grid-template-columns: 1fr; gap: var(--space-3); }
+  .whatsapp-fab__label { display: none; }
+  .whatsapp-fab { width: 52px; padding: 0; justify-content: center; }
+}
+/* Keep the WhatsApp button clear of the compare tray */
+@media (max-width: 700px) {
+  body:has(.compare-tray:not([hidden])) .whatsapp-fab { bottom: 6.5rem; }
+}
+
+/* Phones: smaller headings, tighter spacing, product cards as a tidy list */
+@media (max-width: 560px) {
+  body { font-size: .98rem; }
+  .container { width: min(100% - 1.5rem, 1120px); }
+  h1 { font-size: 1.55rem; }
+  h2 { font-size: 1.2rem; }
+  .hero { padding-block: var(--space-3); }
+  .section { padding-block: var(--space-3); }
+  .hero__lead { font-size: 1rem; }
+  .logo__img { height: 30px; }
+  .site-footer__grid { grid-template-columns: 1fr; gap: var(--space-3); }
+  .whatsapp-fab__label { display: none; }
+  .whatsapp-fab { width: 52px; padding: 0; justify-content: center; }
+
+  /* Card: small picture on the left, text on the right, buttons across the full width below */
+  .grid { grid-template-columns: 1fr; gap: .75rem; margin-block: var(--space-2); }
+  .card { display: grid; grid-template-columns: 104px minmax(0, 1fr); column-gap: .75rem; padding: .75rem; align-content: start; }
+  .card__body { display: contents; }
+  .card__image { grid-column: 1; grid-row: 1 / span 4; align-self: start; border: 1px solid var(--color-border); border-radius: 12px; overflow: hidden; }
+  .card__category, .card__title, .card__price, .card__note { grid-column: 2; }
+  .card__meta, .card__desc { display: none; }
+  .card__category { font-size: .78rem; margin: 0 0 .15rem; }
+  .card__title { font-size: .95rem; margin: 0 0 .25rem; }
+  .card__price { font-size: 1.1rem; margin: 0; }
+  .card__note { font-size: .72rem; margin: .1rem 0 0; }
+  .card__actions { grid-column: 1 / -1; margin-top: .6rem; }
+  .product__actions .btn { flex: 1 1 100%; }
+  .product__price { font-size: 1.35rem; }
+}
+@media (max-width: 760px) {
+  .filters { gap: .75rem; padding: .75rem; }
+  .filters__toggle { display: inline-flex; width: 100%; grid-column: 1 / -1; }
+  .filters__more { display: none; grid-template-columns: 1fr 1fr; gap: .75rem; }
+  .filters.is-open .filters__more { display: grid; }
+  .filters__more .field:nth-child(1), .filters__more .field:nth-child(2), .filters__more .field:nth-child(5), .filters__more .field--action { grid-column: 1 / -1; }
+}

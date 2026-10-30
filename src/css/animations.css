@@ -1,0 +1,79 @@
+/* Light motion only. Content never depends on animation to be visible. */
+.btn, .nav__link, .search { transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+
+/* Hamburger icon morphs to an X when the menu is open */
+.nav-toggle__bars, .nav-toggle__bars::before, .nav-toggle__bars::after {
+  display: block; width: 20px; height: 2px; background: currentColor; border-radius: 2px;
+  transition: transform .2s ease, background-color .2s ease;
+}
+.nav-toggle__bars { position: relative; }
+.nav-toggle__bars::before, .nav-toggle__bars::after { content: ""; position: absolute; left: 0; }
+.nav-toggle__bars::before { top: -6px; }
+.nav-toggle__bars::after { top: 6px; }
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars { background: transparent; }
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars::before { transform: translateY(6px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle__bars::after { transform: translateY(-6px) rotate(-45deg); }
+
+/* Mobile menu: a short fade-in when opened */
+@keyframes menu-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.js .nav.is-open { animation: menu-in .18s ease-out; }
+
+/* One page-load moment: the "how it works" panel settles into place */
+@keyframes panel-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.hero__panel { animation: panel-in .5s ease-out .1s both; }
+
+/* ---- Extra polish (all disabled by prefers-reduced-motion below) ---- */
+
+/* Hero text rises in, one piece after another */
+@keyframes rise-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.hero__copy > * { animation: rise-in .6s ease-out both; }
+.hero__copy > :nth-child(1) { animation-delay: .05s; }
+.hero__copy > :nth-child(2) { animation-delay: .15s; }
+.hero__copy > :nth-child(3) { animation-delay: .25s; }
+.hero__copy > :nth-child(4) { animation-delay: .35s; }
+
+/* Scroll reveal: app.js adds .reveal, then .is-visible as the item enters the screen.
+   Without JavaScript nothing is hidden. */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity .55s ease, transform .55s ease; transition-delay: var(--reveal-delay, 0ms); }
+.reveal.is-visible { opacity: 1; transform: none; }
+
+/* Cards lift and the picture zooms slightly */
+.card { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+.card:hover, .card:focus-within { transform: translateY(-6px); box-shadow: 0 16px 36px rgba(15,40,55,.14); border-color: var(--color-primary); }
+.card__image { overflow: hidden; }
+.card__image img { transition: transform .5s ease; }
+.card:hover .card__image img { transform: scale(1.06); }
+
+/* Buttons, chips and contact cards */
+.btn { transition: transform .18s ease, background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(8,127,140,.25); }
+.btn:active { transform: translateY(0); box-shadow: none; }
+.chip { transition: transform .18s ease, background-color .18s ease; }
+.chip:hover { transform: translateY(-2px); }
+.contact-card { transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+.contact-card:hover { transform: translateY(-4px); border-color: var(--color-primary); box-shadow: 0 14px 30px rgba(15,40,55,.12); }
+
+/* Logo mark tilts on hover */
+.logo__mark { transition: transform .35s ease; }
+.logo:hover .logo__mark { transform: rotate(-12deg) scale(1.08); }
+
+/* Header gets a soft shadow once the page is scrolled */
+.site-header { transition: box-shadow .25s ease, background-color .25s ease; }
+.site-header.is-scrolled { box-shadow: 0 6px 20px rgba(15,40,55,.08); }
+
+/* Gentle floating hero panel */
+@keyframes float-soft { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.hero__panel { animation: panel-in .5s ease-out .1s both, float-soft 6s ease-in-out 1s infinite; }
+
+/* WhatsApp button: pulsing ring and a small pop on hover */
+@keyframes ring { 0% { box-shadow: 0 0 0 0 rgba(8,127,140,.45), 0 10px 26px rgba(6,72,79,.35); } 70% { box-shadow: 0 0 0 16px rgba(8,127,140,0), 0 10px 26px rgba(6,72,79,.35); } 100% { box-shadow: 0 0 0 0 rgba(8,127,140,0), 0 10px 26px rgba(6,72,79,.35); } }
+.whatsapp-fab { animation: ring 2.8s ease-out 2s infinite; transition: transform .2s ease, background-color .2s ease, bottom .25s ease; }
+.whatsapp-fab:hover { transform: translateY(-3px) scale(1.04); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* Compare button feedback */
+@keyframes pulse-once { 0% { transform: scale(1); } 40% { transform: scale(1.06); } 100% { transform: scale(1); } }
+.btn.pulse { animation: pulse-once .25s ease-out; }

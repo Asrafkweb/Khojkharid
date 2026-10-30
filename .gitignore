@@ -1,0 +1,11 @@
+# Generated output - rebuilt by `npm run build`
+dist/
+node_modules/
+
+# PRIVATE research data - never publish
+data/product-research.csv
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
