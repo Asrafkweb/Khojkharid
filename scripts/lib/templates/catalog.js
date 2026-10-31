@@ -16,6 +16,15 @@ function renderCompareButton(product) {
   return `<button class="btn btn--ghost btn--small" type="button" data-compare-id="${escapeHtml(product.id)}" data-compare-name="${escapeHtml(product.name)}" aria-pressed="false" hidden>Add to compare</button>`;
 }
 
+// Round icon + name + count, in a row that scrolls sideways on phones. Used on Home and Categories.
+function renderCategoryIcons(categories, { all = false } = {}) {
+  const { categoryIcon, icon } = require('./icons');
+  const total = categories.reduce((n, c) => n + c.products.length, 0);
+  const item = (href, name, count, svg) => `<li><a class="cat-icon" href="${href}" title="${escapeHtml(name)}"><span class="cat-icon__circle">${svg}</span><span class="cat-icon__name">${escapeHtml(name)}</span><span class="cat-icon__count">${count} product${count === 1 ? '' : 's'}</span></a></li>`;
+  const first = all ? item('/categories/', 'All categories', total, icon('all')) : '';
+  return `<ul class="cat-icons">${first}${categories.map((c) => item(`/categories/${c.slug}/`, c.name, c.products.length, categoryIcon(c.name))).join('')}</ul>`;
+}
+
 function renderProductCard(product) {
   const meta = [product.brand, product.model].filter(Boolean).map(escapeHtml).join(' · ');
   const searchText = [product.name, product.brand, product.model, product.category, product.shortDescription].join(' ').toLowerCase().replace(/\s+/g, ' ');
@@ -30,7 +39,7 @@ function renderProductCard(product) {
     <p class="card__desc">${escapeHtml(product.shortDescription)}</p>
     <div class="card__actions">
       ${renderShopLink(product).replace('class="btn btn--primary"', 'class="btn btn--primary btn--small"')}
-      ${renderCompareButton(product)}
+      ${renderCompareButton(product).replace('class="btn btn--ghost btn--small"', 'class="btn btn--ghost btn--compact"')}
     </div>
   </div>
 </article>`;
@@ -99,7 +108,7 @@ function renderComparePage(products) {
 function renderCategoriesIndex(products) {
   const categories = groupByCategory(products);
   if (categories.length === 0) return `<section class="section"><div class="container"><h1>Categories</h1>${emptyState('No categories yet.')}</div></section>`;
-  return `<section class="section"><div class="container"><h1>Categories</h1><p>Browse products by category. Only categories with published products are listed.</p>${renderCategoryLinks(categories)}</div></section>`;
+  return `<section class="section"><div class="container"><h1>Categories</h1><p>Browse products by category. Only categories with published products are listed.</p>${renderCategoryIcons(categories)}</div></section>`;
 }
 
 function renderCategoryPage(category) {
@@ -145,4 +154,4 @@ function renderProductPage(product, allProducts) {
 </div></article>`;
 }
 
-module.exports = { renderComparePage, renderListingPage, renderCategoriesIndex, renderCategoryPage, renderProductPage, renderGrid, renderCategoryLinks, groupByCategory, emptyState };
+module.exports = { renderComparePage, renderListingPage, renderCategoriesIndex, renderCategoryPage, renderProductPage, renderGrid, renderCategoryLinks, renderCategoryIcons, groupByCategory, emptyState };

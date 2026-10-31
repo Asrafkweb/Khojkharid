@@ -42,6 +42,7 @@ function renderContact() {
     `<div class="contact-cards">
     <a class="contact-card" href="mailto:${email}"><strong>Email</strong><span>${email}</span></a>
     <a class="contact-card" href="${whatsappLink()}" target="_blank" rel="noopener noreferrer"><strong>WhatsApp</strong><span>${whatsappDisplay}</span></a>
+    <a class="contact-card" href="${config.social.facebook}" target="_blank" rel="noopener noreferrer"><strong>Facebook</strong><span>Message us on our page</span></a>
   </div>
   <h2>Good reasons to write to us</h2>
   <ul>
@@ -95,8 +96,9 @@ function renderPrivacy() {
   <h2>4. If you contact us</h2>
   <p>If you email us or message us on WhatsApp, we receive the details you send, such as your name, email address or phone number, and your message. We use them only to reply to you and to improve our product information. We do not add you to a mailing list unless you ask us to. Messages on WhatsApp are also subject to WhatsApp's own privacy policy.</p>
 
-  <h2>5. Hosting and technical data</h2>
+  <h2>5. Hosting, fonts and technical data</h2>
   <p>This website is a static site served by a third-party hosting provider. Like most web hosts, the provider may automatically log technical information when you visit, such as your IP address, browser type, device type and the pages requested, for security and to run the service. We do not control those logs. Please see your host's privacy policy for details.</p>
+  <p>The site's text font (Inter) is loaded from Google Fonts. When your browser downloads it, Google may receive technical information such as your IP address and browser type, under Google's own privacy policy.</p>
 
   <h2>6. Cookies, analytics and advertising</h2>
   <p>KhojKharid does not set its own cookies and does not currently use analytics or advertising trackers. If we add analytics in the future, we will update this page before doing so and explain what is collected.</p>

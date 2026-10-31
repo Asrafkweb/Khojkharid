@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '0 2 1 1 *' # every 1 January, so the year in the footer is always current
   workflow_dispatch:
 permissions:
   contents: read

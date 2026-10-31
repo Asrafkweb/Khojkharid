@@ -8,6 +8,7 @@ function organizationLd() {
   return {
     '@context': 'https://schema.org', '@type': 'Organization', name: config.siteName, url: config.domain,
     logo: abs('/images/logo/logo-light.png'),
+    sameAs: [config.social.facebook],
     email: config.contact.email,
     contactPoint: [{ '@type': 'ContactPoint', contactType: 'customer support', email: config.contact.email, telephone: `+${config.contact.whatsappDigits}`, areaServed: 'NP' }]
   };

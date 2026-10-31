@@ -1,7 +1,6 @@
 // Homepage body. Sections that depend on product data are added in Phase 3.
-const { renderSearchForm } = require('./layout');
 const { escapeHtml } = require('../html-utils');
-const { renderGrid, renderCategoryLinks, groupByCategory } = require('./catalog');
+const { renderGrid, renderCategoryIcons, groupByCategory } = require('./catalog');
 
 function flashBanner(flash) {
   if (!flash || !flash.active) return '';
@@ -16,10 +15,10 @@ function flashBanner(flash) {
 
 function renderHome(products = [], flash = null) {
   const hasProducts = products.length > 0;
-  const recent = [...products].sort((a, b) => b.lastUpdated.localeCompare(a.lastUpdated)).slice(0, 6);
+  const recent = [...products].sort((a, b) => b.lastUpdated.localeCompare(a.lastUpdated)).slice(0, 4);
   const productSections = hasProducts
-    ? `    <section class="section" aria-labelledby="cat-title"><div class="container"><h2 id="cat-title">Browse by category</h2>${renderCategoryLinks(groupByCategory(products))}</div></section>
-    <section class="section" aria-labelledby="recent-title"><div class="container"><h2 id="recent-title">Recently updated products</h2>${renderGrid(recent).replace(' id="product-grid"', '')}<p><a href="/products/">See all products</a></p></div></section>`
+    ? `    <section class="section" aria-labelledby="cat-title"><div class="container"><div class="section__head"><h2 id="cat-title">Shop by category</h2><a class="section__link" href="/categories/">See all <span aria-hidden="true">→</span></a></div>${renderCategoryIcons(groupByCategory(products), { all: true })}</div></section>
+    <section class="section" aria-labelledby="recent-title"><div class="container"><div class="section__head"><h2 id="recent-title">Recently updated</h2><a class="section__link" href="/products/">See all <span aria-hidden="true">→</span></a></div>${renderGrid(recent).replace(' id="product-grid"', '')}<p class="section__more"><a class="btn btn--ghost" href="/products/">See all products</a></p></div></section>`
     : `    <section class="section" aria-labelledby="products-title">
       <div class="container">
         <h2 id="products-title">Products</h2>
@@ -34,7 +33,6 @@ function renderHome(products = [], flash = null) {
         <div class="hero__copy">
           <h1>Find Better Products. Compare Smarter.</h1>
           <p class="hero__lead">Explore useful products, compare features and prices, and find shopping options that suit your needs.</p>
-          ${renderSearchForm('hero', 'search--large')}
           <div class="hero__actions">
             <a class="btn btn--primary" href="/products/">Explore Products</a>
             <a class="btn btn--ghost" href="/compare/">Compare Products</a>

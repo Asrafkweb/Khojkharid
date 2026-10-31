@@ -1,6 +1,7 @@
 // Shared page shell: <head>, header, footer. Every generated page uses renderPage().
 const config = require('../../../site.config');
 const { escapeHtml } = require('../html-utils');
+const { icon } = require('./icons');
 
 const LOGO_W = 174, LOGO_H = 34; // display size of the logo images (they are 614 x 120)
 const LOGO = `<img class="logo__img logo__img--light" src="/images/logo/logo-light.png" width="${LOGO_W}" height="${LOGO_H}" alt="${config.siteName}"><img class="logo__img logo__img--dark" src="/images/logo/logo-dark.png" width="${LOGO_W}" height="${LOGO_H}" alt="" aria-hidden="true">`;
@@ -13,7 +14,7 @@ function renderSearchForm(idPrefix, extraClass = '') {
   return `<form class="search ${extraClass}" action="/products/" method="get" role="search">
     <label class="visually-hidden" for="${idPrefix}-q">Search products</label>
     <span class="search__icon">${SEARCH_ICON}</span>
-    <input id="${idPrefix}-q" class="search__input" type="search" name="q" placeholder="Search products, brands or models" autocomplete="off">
+    <input id="${idPrefix}-q" class="search__input" type="search" name="q" placeholder="Search products" autocomplete="off">
     <button class="btn btn--primary search__button" type="submit">Search</button>
   </form>`;
 }
@@ -61,16 +62,17 @@ function renderFooter() {
     </div>
     <nav class="site-footer__col" aria-label="Explore"><h2 class="site-footer__title">Explore</h2><ul class="site-footer__links">${list(config.footerExplore)}</ul></nav>
     <nav class="site-footer__col" aria-label="Information"><h2 class="site-footer__title">Information</h2><ul class="site-footer__links">${info}</ul></nav>
-    <div class="site-footer__col"><h2 class="site-footer__title">Contact us</h2>
+    <div class="site-footer__col site-footer__contact-col"><h2 class="site-footer__title">Contact us</h2>
       <ul class="site-footer__links site-footer__contact">
         <li><a href="mailto:${email}">${MAIL_ICON}<span>${email}</span></a></li>
         <li><a href="${whatsappLink()}" target="_blank" rel="noopener noreferrer">${CHAT_ICON}<span>WhatsApp ${whatsappDisplay}</span></a></li>
+        <li><a href="${config.social.facebook}" target="_blank" rel="noopener noreferrer">${icon('facebook', 20)}<span>Facebook</span></a></li>
       </ul>
     </div>
   </div>
   <div class="container site-footer__legal">
-    <p>© KhojKharid.online. All rights reserved.</p>
-    <p>Developed by Asraf Digital.</p>
+    <p>© <span data-year>${new Date().getFullYear()}</span> KhojKharid.online. All rights reserved.</p>
+    <p>Developed by <a href="${config.developer.url}" target="_blank" rel="noopener noreferrer">${config.developer.name}</a>.</p>
   </div>
 </footer>
 <a class="whatsapp-fab" href="${whatsappLink('Hello KhojKharid, I have a question.')}" target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp">${CHAT_ICON}<span class="whatsapp-fab__label">Chat</span></a>`;
@@ -107,6 +109,9 @@ function renderPage({ title, description, path, body, noindex = false, isHome = 
   <meta name="description" content="${escapeHtml(description)}">
   ${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${canonical}">`}${social}
   <meta name="theme-color" content="#087F8C">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">

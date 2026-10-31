@@ -75,3 +75,32 @@
     sync();
   });
 })();
+
+// Footer year stays current without editing anything.
+document.querySelectorAll('[data-year]').forEach((node) => { node.textContent = String(new Date().getFullYear()); });
+
+// On phones, tuck the header search away when scrolling down and bring it back when scrolling up.
+(function () {
+  const header = document.querySelector('.site-header');
+  const small = window.matchMedia('(max-width: 860px)');
+  if (!header) return;
+  let lastY = window.scrollY;
+  const fab = document.querySelector('.whatsapp-fab');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (!small.matches) { header.classList.remove('is-search-hidden'); if (fab) fab.classList.remove('is-away'); lastY = y; return; }
+    if (y > 120 && y > lastY + 4) { header.classList.add('is-search-hidden'); if (fab) fab.classList.add('is-away'); }
+    else if (y < lastY - 4 || y <= 120) { header.classList.remove('is-search-hidden'); if (fab) fab.classList.remove('is-away'); }
+    lastY = y;
+  }, { passive: true });
+})();
+
+// Hide the floating WhatsApp button once the footer (which has the same contact links) is on screen.
+(function () {
+  const fab = document.querySelector('.whatsapp-fab');
+  const footer = document.querySelector('.site-footer');
+  if (!fab || !footer || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver((entries) => {
+    entries.forEach((entry) => fab.classList.toggle('is-hidden', entry.isIntersecting));
+  }).observe(footer);
+})();

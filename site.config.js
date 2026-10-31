@@ -10,6 +10,8 @@ module.exports = {
     whatsappDisplay: '+977 9811016309',
     whatsappDigits: '9779811016309' // digits only, with country code, for the wa.me link
   },
+  social: { facebook: 'https://www.facebook.com/share/1DphSQ4q1p/?mibextid=wwXIfr' },
+  developer: { name: 'Asraf Digital', url: 'https://asraf.com.np' },
   legalUpdated: '28 October 2026', // change this date whenever you edit the legal pages
   footerExplore: [
     { label: 'Home', href: '/' },
