@@ -160,18 +160,25 @@ function renderTerms() {
   ${contactLine}`);
 }
 
-function renderFlashSale(flash) {
+function renderFlashSale(flash, products = []) {
   const { escapeHtml } = require('../html-utils');
-  return legal(escapeHtml(flash.title),
-    escapeHtml(flash.text),
-    `<p><a class="btn btn--primary" href="${escapeHtml(flash.affiliateUrl)}" target="_blank" rel="sponsored nofollow noopener noreferrer">View Flash Sale on Daraz</a></p>
+  const { renderGrid } = require('./catalog');
+  const ends = flash.endDate ? new Date(`${flash.endDate}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }) : '';
+  const popular = products.slice(0, 4);
+  return `<section class="section"><div class="container flash-page">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">${escapeHtml(flash.title)}</li></ol></nav>
+  <div class="flash-page__head">${flash.badge ? `<span class="flash__badge" aria-hidden="true">${escapeHtml(flash.badge)}</span>` : ''}<h1>${escapeHtml(flash.title)}</h1></div>
+  ${ends ? `<p class="flash-page__ends">Runs until ${escapeHtml(ends)}</p>` : ''}
+  <p class="legal__intro">${escapeHtml(flash.text)}</p>
+  <p><a class="btn btn--primary btn--shop" href="${escapeHtml(flash.affiliateUrl)}" target="_blank" rel="sponsored nofollow noopener noreferrer">View the sale on Daraz <svg class="arrow-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg><span class="visually-hidden"> (opens in a new tab)</span></a></p>
   <p class="disclosure">Affiliate link: KhojKharid may earn a commission from qualifying purchases. We don't sell or ship products. <a href="/affiliate-disclosure/">Learn more</a></p>
   <h2>Good to know</h2>
-  <ul>
-    <li>Flash sale products, prices and times are set by Daraz and change often.</li>
+  <ul class="legal">
+    <li>Products, prices and times are set by Daraz and change often.</li>
     <li>Offers can end or sell out quickly. Confirm the price on Daraz before you buy.</li>
-    <li>You can also <a href="/products/">browse our products</a> and compare them before you decide.</li>
-  </ul>`, { showDate: false });
+  </ul>
+  ${popular.length ? `<h2>Compare products while you wait</h2>${renderGrid(popular).replace(' id="product-grid"', '')}<p class="section__more"><a class="btn btn--ghost" href="/products/">See all products</a></p>` : ''}
+</div></section>`;
 }
 
 module.exports = { renderFlashSale, renderAbout, renderContact, renderAffiliateDisclosure, renderPrivacy, renderTerms };

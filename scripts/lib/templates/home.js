@@ -4,20 +4,25 @@ const { renderGrid, renderCategoryIcons, groupByCategory } = require('./catalog'
 
 function flashBanner(flash) {
   if (!flash || !flash.active) return '';
+  const ends = flash.endDate ? ` <span class="flash__ends">Ends ${escapeHtml(formatEnd(flash.endDate))}</span>` : '';
+  const badge = flash.badge ? `<span class="flash__badge" aria-hidden="true">${escapeHtml(flash.badge)}</span>` : '';
   return `    <section class="flash" aria-labelledby="flash-title">
       <div class="container flash__inner">
-        <div><h2 id="flash-title">${escapeHtml(flash.title)}</h2><p>Limited-time offers on Daraz. Check what is on sale today.</p></div>
-        <a class="btn btn--primary" href="/flash-sale/">See Flash Sale</a>
+        ${badge}
+        <div class="flash__text"><h2 id="flash-title">${escapeHtml(flash.title)}</h2><p>Limited-time offers on Daraz.${ends}</p></div>
+        <a class="btn btn--primary btn--shop" href="/flash-sale/">${escapeHtml(flash.buttonText)} <svg class="arrow-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
       </div>
     </section>
 `;
 }
 
+const formatEnd = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+
 function renderHome(products = [], flash = null) {
   const hasProducts = products.length > 0;
   const recent = [...products].sort((a, b) => b.lastUpdated.localeCompare(a.lastUpdated)).slice(0, 4);
   const productSections = hasProducts
-    ? `    <section class="section" aria-labelledby="cat-title"><div class="container"><div class="section__head"><h2 id="cat-title">Shop by category</h2><a class="section__link" href="/categories/">See all <span aria-hidden="true">→</span></a></div>${renderCategoryIcons(groupByCategory(products), { all: true })}</div></section>
+    ? `    <section class="section" aria-labelledby="cat-title"><div class="container"><div class="section__head"><h2 id="cat-title">Shop by category</h2><a class="section__link" href="/categories/">See all <span aria-hidden="true">→</span></a></div>${renderCategoryIcons(groupByCategory(products), { all: true, scroll: true })}</div></section>
     <section class="section" aria-labelledby="recent-title"><div class="container"><div class="section__head"><h2 id="recent-title">Recently updated</h2><a class="section__link" href="/products/">See all <span aria-hidden="true">→</span></a></div>${renderGrid(recent).replace(' id="product-grid"', '')}<p class="section__more"><a class="btn btn--ghost" href="/products/">See all products</a></p></div></section>`
     : `    <section class="section" aria-labelledby="products-title">
       <div class="container">

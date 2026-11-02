@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '0 2 1 1 *' # every 1 January, so the year in the footer is always current
+    - cron: '15 18 * * *' # every night just after midnight in Nepal: ended sales hide themselves and the year stays current
   workflow_dispatch:
 permissions:
   contents: read

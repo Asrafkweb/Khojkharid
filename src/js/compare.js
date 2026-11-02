@@ -46,7 +46,9 @@
       button.hidden = false; // revealed only now that the script works
       button.setAttribute('aria-pressed', String(selected));
       button.setAttribute('aria-label', `${selected ? 'Remove' : 'Add'} ${name} ${selected ? 'from' : 'to'} compare`);
-      button.textContent = selected ? 'Remove from compare' : 'Add to compare';
+      const text = selected ? 'Remove from compare' : 'Add to compare';
+      const label = button.querySelector('.cmp-label');
+      if (label) { label.textContent = text; button.title = text; } else { button.textContent = text; }
     });
     tray.hidden = ids.length === 0 || onComparePage;
     if (ids.length > 0 && message.dataset.limit !== 'true') message.textContent = `${ids.length} of ${MAX_PRODUCTS} selected`;
@@ -103,7 +105,16 @@
     const specLabels = [];
     selected.forEach((p) => p.specs.forEach((s) => { if (!specLabels.includes(s.label)) specLabels.push(s.label); }));
     const list = (items) => items.length ? el('ul', { class: 'feature-list' }, ...items.map((item) => el('li', { text: item }))) : NOT_PROVIDED;
-    const shopLink = (p) => el('a', { class: 'btn btn--primary btn--small', href: p.affiliateUrl, target: '_blank', rel: 'sponsored nofollow noopener noreferrer', text: 'View Price on Daraz ↗' });
+    const arrow = () => {
+      const ns = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(ns, 'svg');
+      [['viewBox', '0 0 24 24'], ['width', '16'], ['height', '16'], ['fill', 'none'], ['stroke', 'currentColor'], ['stroke-width', '3.2'], ['stroke-linecap', 'round'], ['stroke-linejoin', 'round'], ['aria-hidden', 'true'], ['class', 'arrow-ico']].forEach(([k, v]) => svg.setAttribute(k, v));
+      const path = document.createElementNS(ns, 'path');
+      path.setAttribute('d', 'M7 17 17 7M8 7h9v9');
+      svg.appendChild(path);
+      return svg;
+    };
+    const shopLink = (p) => el('a', { class: 'btn btn--primary btn--shop btn--small', href: p.affiliateUrl, target: '_blank', rel: 'sponsored nofollow noopener noreferrer' }, 'View Price on Daraz ', arrow());
 
     const rows = [
       ['Price', (p) => `${formatPrice(p)} (checked ${formatDate(p.lastUpdated)})`],

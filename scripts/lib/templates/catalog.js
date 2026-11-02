@@ -7,29 +7,37 @@ const formatShortDate = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString
 const formatDate = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 
 // Honest shopping link. It uses the affiliate URL exactly as supplied.
-function renderShopLink(product, extraClass = 'btn--primary') {
-  return `<a class="btn ${extraClass}" href="${escapeHtml(product.affiliateUrl)}" target="_blank" rel="${AFFILIATE_REL}">View Price on Daraz <span aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>`;
+function renderShopLink(product, extraClass = 'btn--primary btn--shop') {
+  return `<a class="btn ${extraClass}" href="${escapeHtml(product.affiliateUrl)}" target="_blank" rel="${AFFILIATE_REL}">View Price on Daraz <svg class="arrow-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg><span class="visually-hidden"> (opens in a new tab)</span></a>`;
 }
 
 // Hidden until the compare script (Phase 4) is loaded, so there is never a dead button.
-function renderCompareButton(product) {
-  return `<button class="btn btn--ghost btn--small" type="button" data-compare-id="${escapeHtml(product.id)}" data-compare-name="${escapeHtml(product.name)}" aria-pressed="false" hidden>Add to compare</button>`;
+const COMPARE_ICON = '<svg class="cmp-add" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 4 3 8l4 4M3 8h14M17 12l4 4-4 4M21 16H7"/></svg><svg class="cmp-on" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12.5 10 17.5 19 7"/></svg>';
+
+// icon: a round icon-only button (used on cards). The text stays for screen readers and the tooltip.
+function renderCompareButton(product, { icon = false } = {}) {
+  const attrs = `type="button" data-compare-id="${escapeHtml(product.id)}" data-compare-name="${escapeHtml(product.name)}" aria-pressed="false" hidden`;
+  if (icon) return `<button class="btn btn--ghost btn--icon" ${attrs} title="Add to compare">${COMPARE_ICON}<span class="visually-hidden cmp-label">Add to compare</span></button>`;
+  return `<button class="btn btn--ghost btn--small" ${attrs}>Add to compare</button>`;
 }
 
 // Round icon + name + count, in a row that scrolls sideways on phones. Used on Home and Categories.
-function renderCategoryIcons(categories, { all = false } = {}) {
+function renderCategoryIcons(categories, { all = false, scroll = false } = {}) {
   const { categoryIcon, icon } = require('./icons');
   const total = categories.reduce((n, c) => n + c.products.length, 0);
   const item = (href, name, count, svg) => `<li><a class="cat-icon" href="${href}" title="${escapeHtml(name)}"><span class="cat-icon__circle">${svg}</span><span class="cat-icon__name">${escapeHtml(name)}</span><span class="cat-icon__count">${count} product${count === 1 ? '' : 's'}</span></a></li>`;
   const first = all ? item('/categories/', 'All categories', total, icon('all')) : '';
-  return `<ul class="cat-icons">${first}${categories.map((c) => item(`/categories/${c.slug}/`, c.name, c.products.length, categoryIcon(c.name))).join('')}</ul>`;
+  const list = `<ul class="cat-icons${scroll ? ' cat-icons--row' : ''}">${first}${categories.map((c) => item(`/categories/${c.slug}/`, c.name, c.products.length, categoryIcon(c.name))).join('')}</ul>`;
+  if (!scroll) return list;
+  // One row that scrolls sideways; the arrow buttons only appear (via script) when there is more to see.
+  return `<div class="cat-scroller"><button class="cat-scroller__btn cat-scroller__btn--prev" type="button" aria-label="Scroll categories left">‹</button>${list}<button class="cat-scroller__btn cat-scroller__btn--next" type="button" aria-label="Scroll categories right">›</button></div>`;
 }
 
 function renderProductCard(product) {
   const meta = [product.brand, product.model].filter(Boolean).map(escapeHtml).join(' · ');
   const searchText = [product.name, product.brand, product.model, product.category, product.shortDescription].join(' ').toLowerCase().replace(/\s+/g, ' ');
   return `<article class="card" data-id="${escapeHtml(product.id)}" data-name="${escapeHtml(product.name.toLowerCase())}" data-category="${product.categorySlug}" data-brand="${escapeHtml(product.brand)}" data-price="${product.price}" data-updated="${product.lastUpdated}" data-search="${escapeHtml(searchText)}">
-  <a class="card__image" href="${product.url}" tabindex="-1" aria-hidden="true"><img src="${escapeHtml(product.imageUrl)}" alt="" width="400" height="400" loading="lazy"></a>
+  <a class="card__image" href="${product.url}" tabindex="-1" aria-hidden="true"><img src="${escapeHtml(product.imageUrl)}" alt="" width="400" height="400" loading="lazy" decoding="async"></a>
   <div class="card__body">
     <p class="card__category"><a href="/categories/${product.categorySlug}/">${escapeHtml(product.category)}</a></p>
     <h3 class="card__title"><a href="${product.url}">${escapeHtml(product.name)}</a></h3>
@@ -38,8 +46,8 @@ function renderProductCard(product) {
     <p class="card__note">Price checked ${formatShortDate(product.lastUpdated)}</p>
     <p class="card__desc">${escapeHtml(product.shortDescription)}</p>
     <div class="card__actions">
-      ${renderShopLink(product).replace('class="btn btn--primary"', 'class="btn btn--primary btn--small"')}
-      ${renderCompareButton(product).replace('class="btn btn--ghost btn--small"', 'class="btn btn--ghost btn--compact"')}
+      ${renderShopLink(product).replace('class="btn btn--primary btn--shop"', 'class="btn btn--primary btn--shop btn--small"')}
+      ${renderCompareButton(product, { icon: true })}
     </div>
   </div>
 </article>`;

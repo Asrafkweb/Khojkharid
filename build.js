@@ -10,7 +10,8 @@ const { renderNotFound } = require('./scripts/lib/templates/not-found');
 const catalog = require('./scripts/lib/templates/catalog');
 const pages = require('./scripts/lib/templates/pages');
 const seo = require('./scripts/lib/seo');
-const flash = require('./flash-sale.config');
+// Settings you can leave out of flash-sale.config.js: these defaults are used instead.
+const flash = { badge: '', endDate: '', buttonText: 'See Flash Sale deals', menuLabel: 'Flash Sale', ...require('./flash-sale.config') };
 const { isSafeHttpsUrl } = require('./scripts/lib/html-utils');
 const { loadProducts, csvPathFromArgs, printReport } = require('./scripts/lib/load-products');
 
@@ -56,12 +57,21 @@ function build() {
   if (result.errors.length > 0) throw new Error(`${result.errors.length} data error(s). Nothing was built. Fix the CSV and try again.`);
   const products = result.products;
 
+  // The sale hides itself after endDate (Nepal time), so an old campaign never stays on the site.
+  if (flash.endDate && !/^\d{4}-\d{2}-\d{2}$/.test(flash.endDate)) {
+    throw new Error("flash-sale.config.js: endDate must look like '2026-11-11' (year-month-day), or be left empty.");
+  }
+  const todayNepal = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kathmandu' });
+  if (flash.active && flash.endDate && todayNepal > flash.endDate) {
+    flash.active = false;
+    console.log(`  Flash Sale ended on ${flash.endDate}, so it is hidden from the site.`);
+  }
   if (flash.active && !isSafeHttpsUrl(flash.affiliateUrl)) {
     throw new Error('flash-sale.config.js: active is true, but affiliateUrl is empty or does not start with https://. Paste your Flash Sale link, or set active to false.');
   }
   if (flash.active) {
-    config.nav.push({ label: 'Flash Sale', href: '/flash-sale/' });
-    config.footerExplore.push({ label: 'Flash Sale', href: '/flash-sale/' });
+    config.nav.push({ label: flash.menuLabel, href: '/flash-sale/' });
+    config.footerExplore.push({ label: flash.menuLabel, href: '/flash-sale/' });
   }
 
   console.log('Building', config.siteName);
@@ -137,7 +147,7 @@ function build() {
     { path: '/terms/', title: 'Terms and Conditions', description: 'The terms for using the KhojKharid website.', body: pages.renderTerms() }
   ];
   if (flash.active) {
-    staticPages.push({ path: '/flash-sale/', title: flash.title, description: 'Open the current Daraz Flash Sale from KhojKharid and see limited-time offers.', body: pages.renderFlashSale(flash) });
+    staticPages.push({ path: '/flash-sale/', title: flash.title, description: `${flash.title}: open the current Daraz campaign from KhojKharid and see limited-time offers.`, body: pages.renderFlashSale(flash, products) });
   }
   for (const page of staticPages) writePage(page.path, renderPage(page));
 

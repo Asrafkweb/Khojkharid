@@ -104,3 +104,22 @@ document.querySelectorAll('[data-year]').forEach((node) => { node.textContent = 
     entries.forEach((entry) => fab.classList.toggle('is-hidden', entry.isIntersecting));
   }).observe(footer);
 })();
+
+// Home category row: show the left/right arrows only when there are more categories to scroll to.
+document.querySelectorAll('.cat-scroller').forEach((wrap) => {
+  const row = wrap.querySelector('.cat-icons');
+  const prev = wrap.querySelector('.cat-scroller__btn--prev');
+  const next = wrap.querySelector('.cat-scroller__btn--next');
+  if (!row || !prev || !next) return;
+  const update = () => {
+    const max = row.scrollWidth - row.clientWidth;
+    wrap.classList.toggle('has-prev', row.scrollLeft > 4);
+    wrap.classList.toggle('has-next', row.scrollLeft < max - 4);
+  };
+  const step = (dir) => row.scrollBy({ left: dir * Math.max(240, row.clientWidth * 0.8), behavior: 'smooth' });
+  prev.addEventListener('click', () => step(-1));
+  next.addEventListener('click', () => step(1));
+  row.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+});

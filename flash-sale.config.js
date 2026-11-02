@@ -6,8 +6,8 @@
 //
 // To hide Flash Sale from the whole site (banner, menu and page), set active to false.
 module.exports = {
-  active: false,
-  affiliateUrl: '',
-  title: 'Daraz Flash Sale',
-  text: 'Daraz runs flash sales with limited-time offers. Open the sale on Daraz to see which products are included right now.'
+  active: true,
+  affiliateUrl: 'https://s.daraz.com.np/s.ZLw8p?cc',
+  title: '11.11 mega campaign',
+  text: 'I found this great deal on Daraz! Check it out! Hurry! Amazing deals on Daraz!'
 };
