@@ -10,4 +10,9 @@ module.exports = {
   affiliateUrl: 'https://s.daraz.com.np/s.ZLw8p?cc',
   title: '11.11 mega campaign',
   text: 'I found this great deal on Daraz! Check it out! Hurry! Amazing deals on Daraz!'
+
+  badge: '11.11',
+  endDate: '2026-11-11',
+  buttonText: 'See 11.11 Deals',
+  menuLabel: '11.11 Sale',
 };
