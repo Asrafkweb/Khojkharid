@@ -123,3 +123,62 @@ document.querySelectorAll('.cat-scroller').forEach((wrap) => {
   window.addEventListener('resize', update);
   update();
 });
+
+// Share icons (product page and product cards). Opens the device's own share menu when the browser
+// has one (phones, and many computers); otherwise it copies the link. The buttons are hidden until this runs.
+(function () {
+  const buttons = document.querySelectorAll('[data-share-url]');
+  if (!buttons.length) return;
+  let toast, timer;
+  function say(message) {
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'share-toast';
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    // Re-adding the class after a frame makes the message show again on repeated clicks.
+    toast.classList.remove('is-visible');
+    requestAnimationFrame(() => toast.classList.add('is-visible'));
+    clearTimeout(timer);
+    timer = setTimeout(() => toast.classList.remove('is-visible'), 2200);
+  }
+  function fallback(url) {
+    const input = document.createElement('input');
+    input.value = url;
+    input.setAttribute('readonly', '');
+    input.style.position = 'fixed';
+    input.style.opacity = '0';
+    document.body.appendChild(input);
+    input.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(input);
+    say(ok ? 'Link copied' : url);
+  }
+  function copy(url) {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(url).then(() => say('Link copied'), () => fallback(url));
+    } else {
+      fallback(url);
+    }
+  }
+  buttons.forEach((btn) => {
+    btn.hidden = false;
+    btn.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const url = btn.getAttribute('data-share-url');
+      const title = btn.getAttribute('data-share-title');
+      if (navigator.share) {
+        navigator.share({ title: title, text: title + ' - KhojKharid', url: url }).catch((err) => {
+          if (!err || err.name !== 'AbortError') copy(url);
+        });
+      } else {
+        copy(url);
+      }
+    });
+  });
+})();

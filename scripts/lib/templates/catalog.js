@@ -1,5 +1,6 @@
 // Templates that show products: cards, listing, categories, product page.
 const { escapeHtml } = require('../html-utils');
+const siteConfig = require('../../../site.config');
 
 const AFFILIATE_REL = 'sponsored nofollow noopener noreferrer';
 const formatPrice = (p) => `${p.currency} ${p.price.toLocaleString('en-US')}`;
@@ -9,6 +10,15 @@ const formatDate = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-
 // Honest shopping link. It uses the affiliate URL exactly as supplied.
 function renderShopLink(product, extraClass = 'btn--primary btn--shop') {
   return `<a class="btn ${extraClass}" href="${escapeHtml(product.affiliateUrl)}" target="_blank" rel="${AFFILIATE_REL}">View Price on Daraz <svg class="arrow-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg><span class="visually-hidden"> (opens in a new tab)</span></a>`;
+}
+
+// Round share icon in the corner of the product photo. It is hidden until app.js runs, so there is never a dead button.
+// app.js opens the phone/computer's own share menu, or copies the link if the browser has no share menu.
+const SHARE_ICON = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><circle cx="18" cy="5" r="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="19" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.6 10.5l6.8-4M8.6 13.5l6.8 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+
+function renderShareButton(product, { card = false } = {}) {
+  const url = `${siteConfig.domain}${product.url}`;
+  return `<button class="share-btn${card ? ' share-btn--card' : ''}" type="button" hidden aria-label="Share ${escapeHtml(product.name)}" data-share-url="${escapeHtml(url)}" data-share-title="${escapeHtml(product.name)}">${SHARE_ICON}</button>`;
 }
 
 // Hidden until the compare script (Phase 4) is loaded, so there is never a dead button.
@@ -38,6 +48,7 @@ function renderProductCard(product) {
   const searchText = [product.name, product.brand, product.model, product.category, product.shortDescription].join(' ').toLowerCase().replace(/\s+/g, ' ');
   return `<article class="card" data-id="${escapeHtml(product.id)}" data-name="${escapeHtml(product.name.toLowerCase())}" data-category="${product.categorySlug}" data-brand="${escapeHtml(product.brand)}" data-price="${product.price}" data-updated="${product.lastUpdated}" data-search="${escapeHtml(searchText)}">
   <a class="card__image" href="${product.url}" tabindex="-1" aria-hidden="true"><img src="${escapeHtml(product.imageUrl)}" alt="" width="400" height="400" loading="lazy" decoding="async"></a>
+  ${renderShareButton(product, { card: true })}
   <div class="card__body">
     <p class="card__category"><a href="/categories/${product.categorySlug}/">${escapeHtml(product.category)}</a></p>
     <h3 class="card__title"><a href="${product.url}">${escapeHtml(product.name)}</a></h3>
@@ -140,7 +151,10 @@ function renderProductPage(product, allProducts) {
   return `<article class="section"><div class="container">
   <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/categories/">Categories</a></li><li><a href="/categories/${product.categorySlug}/">${escapeHtml(product.category)}</a></li><li aria-current="page">${escapeHtml(product.name)}</li></ol></nav>
   <div class="product">
-    <img class="product__image" src="${escapeHtml(product.imageUrl)}" alt="${escapeHtml(product.name)}" width="800" height="800">
+    <div class="product__media">
+      <img class="product__image" src="${escapeHtml(product.imageUrl)}" alt="${escapeHtml(product.name)}" width="800" height="800">
+      ${renderShareButton(product)}
+    </div>
     <div class="product__summary">
       <h1>${escapeHtml(product.name)}</h1>
       <p class="product__price">${escapeHtml(formatPrice(product))}</p>

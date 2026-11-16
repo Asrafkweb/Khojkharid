@@ -363,3 +363,14 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
 
 /* ---- Thick arrow on the "View Price on Daraz" buttons ---- */
 .arrow-ico { flex: none; width: 1.1em; height: 1.1em; }
+
+/* Share icon in the corner of a product photo (product page and cards) */
+.product__media { position: relative; }
+.share-btn { position: absolute; top: .75rem; right: .75rem; z-index: 2; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--color-border); border-radius: 50%; background: transparent; color: var(--color-link); cursor: pointer; box-shadow: var(--shadow-soft); }
+.share-btn:hover { background: var(--color-secondary); border-color: var(--color-primary); }
+.share-btn[hidden] { display: none; }
+.share-btn--card { top: .6rem; right: .6rem; width: 40px; height: 40px; }
+.share-btn--card svg { width: 20px; height: 20px; }
+/* One small message at the bottom of the screen ("Link copied") */
+.share-toast { position: fixed; left: 50%; bottom: 5rem; transform: translateX(-50%); z-index: 60; max-width: calc(100% - 2rem); padding: .55rem 1rem; border-radius: var(--radius-pill); background: var(--color-deep); color: #fff; font-size: .95rem; font-weight: 600; opacity: 0; pointer-events: none; overflow-wrap: anywhere; transition: opacity .2s ease; }
+.share-toast.is-visible { opacity: 1; }

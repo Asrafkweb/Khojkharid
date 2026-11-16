@@ -33,7 +33,7 @@
 }
 
 @media (max-width: 760px) {
-  .product { grid-template-columns: 1fr; gap: var(--space-3); }
+  .product { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
   .grid { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
 }
 
@@ -70,6 +70,9 @@
   .grid { grid-template-columns: 1fr; gap: .85rem; margin-block: var(--space-2); }
   .card { display: grid; grid-template-columns: 96px minmax(0, 1fr); grid-template-rows: auto auto 1fr auto auto auto; column-gap: .85rem; padding: .9rem; align-content: start; }
   .card__body { display: contents; }
+  /* Share icon sits in the top-right corner of the small photo (photo is 96px wide, card padding .9rem) */
+  .share-btn--card { top: calc(.9rem + .3rem); right: auto; left: calc(.9rem + 96px - 36px - .3rem); width: 36px; height: 36px; }
+  .share-btn--card svg { width: 18px; height: 18px; }
   .card__image { grid-column: 1; grid-row: 1 / span 3; align-self: start; border: 1px solid var(--color-border); border-radius: 12px; overflow: hidden; }
   .card__category { grid-column: 2; grid-row: 1; margin: 0 0 .4rem; }
   .card__price { grid-column: 2; grid-row: 2; font-size: 1.3rem; margin: 0; }
